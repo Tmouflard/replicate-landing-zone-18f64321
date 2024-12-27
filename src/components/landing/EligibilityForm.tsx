@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export const EligibilityForm = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -16,6 +17,7 @@ export const EligibilityForm = () => {
     email: "",
     postal: "",
     phone: "",
+    cookiesConsent: false,
   });
 
   const handleInputChange = (
@@ -65,6 +67,11 @@ export const EligibilityForm = () => {
 
     if (!isValid) {
       toast.error("Veuillez remplir tous les champs obligatoires");
+      return;
+    }
+
+    if (!formData.cookiesConsent) {
+      toast.error("Veuillez accepter les conditions d'utilisation");
       return;
     }
 
@@ -280,6 +287,34 @@ export const EligibilityForm = () => {
           {currentStepData.component}
         </div>
 
+        {isLastStep && (
+          <div className="flex items-start space-x-2">
+            <Checkbox
+              id="cookiesConsent"
+              checked={formData.cookiesConsent}
+              onCheckedChange={(checked) => 
+                setFormData(prev => ({ ...prev, cookiesConsent: checked as boolean }))
+              }
+            />
+            <label
+              htmlFor="cookiesConsent"
+              className="text-xs text-gray-500 cursor-pointer"
+            >
+              En soumettant cette demande, vous acceptez d'être contacté par
+              téléphone et de recevoir des emails de la part des partenaires pour
+              le suivi de votre demande et la mission commerciale qui peut en
+              découler. Vous disposez du droit de vous inscrire sur la liste
+              d'opposition au démarchage téléphonique Bloctel ici. Pour en savoir
+              plus sur la gestion de vos données personnelles et exercer vos
+              droits, consultez notre{" "}
+              <a href="#" className="text-primary underline">
+                politique de confidentialité des données
+              </a>
+              .
+            </label>
+          </div>
+        )}
+
         <div className="flex gap-4">
           {currentStep > 0 && (
             <Button
@@ -291,26 +326,10 @@ export const EligibilityForm = () => {
               Retour
             </Button>
           )}
-          <Button type="submit" className="flex-1">
+          <Button type="submit" className="flex-1 text-white">
             {isLastStep ? "Calculer Mes Aides" : "Continuer"}
           </Button>
         </div>
-
-        {isLastStep && (
-          <p className="text-xs text-gray-500 mt-4">
-            COOKIES CONSENT : En soumettant cette demande, vous acceptez d'être
-            contacté par téléphone et de recevoir des emails de la part des
-            partenaires pour le suivi de votre demande et la mission commerciale qui
-            peut en découler. Vous disposez du droit de vous inscrire sur la liste
-            d'opposition au démarchage téléphonique Bloctel ici. Pour en savoir plus
-            sur la gestion de vos données personnelles et exercer vos droits,
-            consultez notre{" "}
-            <a href="#" className="text-primary underline">
-              politique de confidentialité des données
-            </a>
-            .
-          </p>
-        )}
       </form>
     </div>
   );
