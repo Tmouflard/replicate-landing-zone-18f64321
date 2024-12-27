@@ -1,50 +1,57 @@
 interface LeadbyteData {
-  email: string;
   firstname: string;
   lastname: string;
+  email: string;
+  phone1: string;
   postcode: string;
-  c2?: string;
   chauffage: string;
   proprietaire: string;
   habitation: string;
 }
 
 export const submitToLeadbyte = async (formData: any): Promise<any> => {
-  // Mapping des données du formulaire vers le format Leadbyte
+  // Mapping des données du formulaire vers le format Leadbyte exactement comme dans le formulaire HTML
   const [firstName, ...lastNameParts] = formData.name.split(' ');
   
   const leadbyteData: LeadbyteData = {
-    email: formData.email,
     firstname: firstName,
     lastname: lastNameParts.join(' '),
+    email: formData.email,
+    phone1: formData.phone,
     postcode: formData.postal,
     chauffage: formData.heatingType,
-    proprietaire: formData.isOwner === 'oui' ? 'yes' : 'no',
+    proprietaire: formData.isOwner === 'oui' ? 'Propriétaire' : 'Locataire',
     habitation: formData.householdSize,
   };
 
   try {
-    const proxyUrl = 'https://api.allorigins.win/raw?url=';
-    const targetUrl = 'https://leadstudio.leadbyte.co.uk/api/submit.php?campid=POMPE-A-CHALEUR&sid=1&returnjson=yes';
-    
-    const response = await fetch(proxyUrl + encodeURIComponent(targetUrl), {
+    const response = await fetch('https://leadstudio.leadbyte.co.uk/api/submit.php', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Origin': window.location.origin,
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: JSON.stringify(leadbyteData),
+      body: new URLSearchParams({
+        ...leadbyteData,
+        campid: 'POMPE-A-CHALEUR',
+        sid: '1',
+        returnjson: 'yes'
+      }).toString()
     });
 
     if (!response.ok) {
-      console.error('Response not OK:', await response.text());
+      const errorText = await response.text();
+      console.error('Leadbyte error response:', errorText);
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
     console.log('Leadbyte response:', data);
-    return data;
+    
+    // On considère la réponse comme un succès si nous n'avons pas d'erreur
+    return {
+      success: !data.code || data.code === 0,
+      ...data
+    };
   } catch (error) {
     console.error('Error submitting to Leadbyte:', error);
     throw error;
