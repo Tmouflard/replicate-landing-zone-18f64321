@@ -2,32 +2,236 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export const EligibilityForm = () => {
+  const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    postal: "",
-    phone: "",
     heatingType: "",
     income: "",
     householdSize: "",
     isOwner: "",
+    name: "",
+    email: "",
+    postal: "",
+    phone: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    toast.success("Votre demande a été envoyée avec succès!");
-  };
+  const steps = [
+    {
+      title: "Type de chauffage",
+      field: "heatingType",
+      component: (
+        <div className="space-y-4">
+          <Label>Quel est votre type de chauffage actuel ?</Label>
+          <RadioGroup
+            value={formData.heatingType}
+            onValueChange={(value) =>
+              handleInputChange({ target: { name: "heatingType", value } })
+            }
+            className="grid grid-cols-1 gap-4"
+          >
+            {["Fioul", "Gaz", "Électrique"].map((type) => (
+              <label
+                key={type}
+                className="flex items-center space-x-3 border rounded-lg p-4 cursor-pointer hover:bg-gray-50"
+              >
+                <RadioGroupItem value={type.toLowerCase()} id={type} />
+                <span>{type}</span>
+              </label>
+            ))}
+          </RadioGroup>
+        </div>
+      ),
+    },
+    {
+      title: "Revenu fiscal",
+      field: "income",
+      component: (
+        <div className="space-y-4">
+          <Label>Quel est votre revenu fiscal de référence ?</Label>
+          <RadioGroup
+            value={formData.income}
+            onValueChange={(value) =>
+              handleInputChange({ target: { name: "income", value } })
+            }
+            className="grid grid-cols-1 gap-4"
+          >
+            {[
+              { label: "0 € - 15 250 €", value: "0-15250" },
+              { label: "15 251 € - 30 000 €", value: "15251-30000" },
+              { label: "Plus de 30 000 €", value: "30001+" },
+            ].map((option) => (
+              <label
+                key={option.value}
+                className="flex items-center space-x-3 border rounded-lg p-4 cursor-pointer hover:bg-gray-50"
+              >
+                <RadioGroupItem value={option.value} id={option.value} />
+                <span>{option.label}</span>
+              </label>
+            ))}
+          </RadioGroup>
+        </div>
+      ),
+    },
+    {
+      title: "Composition du foyer",
+      field: "householdSize",
+      component: (
+        <div className="space-y-4">
+          <Label>Combien de personnes composent votre foyer ?</Label>
+          <RadioGroup
+            value={formData.householdSize}
+            onValueChange={(value) =>
+              handleInputChange({ target: { name: "householdSize", value } })
+            }
+            className="grid grid-cols-3 gap-4"
+          >
+            {[1, 2, 3, 4, 5, "plus de 5"].map((number) => (
+              <label
+                key={number}
+                className="flex items-center justify-center border rounded-lg p-4 cursor-pointer hover:bg-gray-50"
+              >
+                <RadioGroupItem value={String(number)} id={String(number)} />
+                <span className="ml-2">{number}</span>
+              </label>
+            ))}
+          </RadioGroup>
+        </div>
+      ),
+    },
+    {
+      title: "Propriétaire",
+      field: "isOwner",
+      component: (
+        <div className="space-y-4">
+          <Label>Êtes-vous propriétaire de votre logement ?</Label>
+          <RadioGroup
+            value={formData.isOwner}
+            onValueChange={(value) =>
+              handleInputChange({ target: { name: "isOwner", value } })
+            }
+            className="grid grid-cols-2 gap-4"
+          >
+            {[
+              { label: "Oui", value: "oui" },
+              { label: "Non", value: "non" },
+            ].map((option) => (
+              <label
+                key={option.value}
+                className="flex items-center justify-center border rounded-lg p-4 cursor-pointer hover:bg-gray-50"
+              >
+                <RadioGroupItem value={option.value} id={option.value} />
+                <span className="ml-2">{option.label}</span>
+              </label>
+            ))}
+          </RadioGroup>
+        </div>
+      ),
+    },
+    {
+      title: "Vos coordonnées",
+      fields: ["name", "email", "postal", "phone"],
+      component: (
+        <div className="space-y-4">
+          <div>
+            <Label htmlFor="name">Nom et Prénom</Label>
+            <Input
+              id="name"
+              type="text"
+              name="name"
+              value={formData.name}
+              placeholder="Votre nom complet"
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div>
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              name="email"
+              value={formData.email}
+              placeholder="votre@email.com"
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div>
+            <Label htmlFor="postal">Code Postal</Label>
+            <Input
+              id="postal"
+              type="text"
+              name="postal"
+              value={formData.postal}
+              placeholder="75000"
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div>
+            <Label htmlFor="phone">Téléphone</Label>
+            <Input
+              id="phone"
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              placeholder="06 12 34 56 78"
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+        </div>
+      ),
+    },
+  ];
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | { target: { name: string; value: string } }
   ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
+
+  const handleNext = () => {
+    const currentField = steps[currentStep].field || steps[currentStep].fields?.[0];
+    if (!formData[currentField as keyof typeof formData]) {
+      toast.error("Veuillez répondre à la question pour continuer");
+      return;
+    }
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handleBack = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const lastStep = steps[steps.length - 1];
+    const requiredFields = lastStep.fields || [lastStep.field];
+    const isValid = requiredFields.every(
+      (field) => formData[field as keyof typeof formData]
+    );
+
+    if (!isValid) {
+      toast.error("Veuillez remplir tous les champs obligatoires");
+      return;
+    }
+
+    toast.success("Votre demande a été envoyée avec succès!");
+  };
+
+  const currentStepData = steps[currentStep];
+  const isLastStep = currentStep === steps.length - 1;
 
   return (
     <div className="bg-white rounded-3xl shadow-xl p-8">
@@ -40,153 +244,62 @@ export const EligibilityForm = () => {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-4">
-          <div>
-            <Label htmlFor="name">Nom et Prénom</Label>
-            <Input
-              id="name"
-              type="text"
-              name="name"
-              placeholder="Votre nom complet"
-              onChange={handleInputChange}
-              required
-            />
-          </div>
+      <div className="mb-6">
+        <div className="flex justify-between mb-2">
+          <span className="text-sm font-medium">
+            Étape {currentStep + 1} sur {steps.length}
+          </span>
+          <span className="text-sm font-medium">
+            {Math.round(((currentStep + 1) / steps.length) * 100)}%
+          </span>
+        </div>
+        <div className="w-full bg-gray-200 rounded-full h-2">
+          <div
+            className="bg-accent rounded-full h-2 transition-all duration-300"
+            style={{
+              width: `${((currentStep + 1) / steps.length) * 100}%`,
+            }}
+          />
+        </div>
+      </div>
 
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              name="email"
-              placeholder="votre@email.com"
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="postal">Code Postal</Label>
-            <Input
-              id="postal"
-              type="text"
-              name="postal"
-              placeholder="75000"
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="phone">Téléphone</Label>
-            <Input
-              id="phone"
-              type="tel"
-              name="phone"
-              placeholder="06 12 34 56 78"
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="heatingType">Type de chauffage</Label>
-            <select
-              id="heatingType"
-              name="heatingType"
-              className="w-full p-3 border rounded-lg text-gray-600"
-              onChange={handleInputChange}
-              required
-            >
-              <option value="">Sélectionnez votre type de chauffage</option>
-              <option value="fioul">Fioul</option>
-              <option value="gaz">Gaz</option>
-              <option value="electrique">Électrique</option>
-            </select>
-          </div>
-
-          <div>
-            <Label htmlFor="income">Revenu fiscal</Label>
-            <select
-              id="income"
-              name="income"
-              className="w-full p-3 border rounded-lg text-gray-600"
-              onChange={handleInputChange}
-              required
-            >
-              <option value="">Sélectionnez votre tranche de revenus</option>
-              <option value="0-15250">0 € - 15 250 €</option>
-              <option value="15251-30000">15 251 € - 30 000 €</option>
-              <option value="30001+">Plus de 30 000 €</option>
-            </select>
-          </div>
-
-          <div>
-            <Label>Nombre de personnes dans votre foyer</Label>
-            <div className="grid grid-cols-3 gap-4 mt-2">
-              {[1, 2, 3, 4, 5, "plus de 5"].map((number) => (
-                <label key={number} className="flex items-center">
-                  <input
-                    type="radio"
-                    name="householdSize"
-                    value={number}
-                    className="mr-2"
-                    onChange={handleInputChange}
-                  />
-                  <span>{number}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <Label>Êtes vous propriétaire de la maison?</Label>
-            <div className="flex gap-4 mt-2">
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="isOwner"
-                  value="oui"
-                  className="mr-2"
-                  onChange={handleInputChange}
-                />
-                <span>Oui</span>
-              </label>
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="isOwner"
-                  value="non"
-                  className="mr-2"
-                  onChange={handleInputChange}
-                />
-                <span>Non</span>
-              </label>
-            </div>
-          </div>
+      <form onSubmit={isLastStep ? handleSubmit : handleNext} className="space-y-6">
+        <div className="min-h-[300px]">
+          <h3 className="text-lg font-semibold mb-4">{currentStepData.title}</h3>
+          {currentStepData.component}
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-accent hover:bg-accent/90 text-white font-bold py-4 px-8 rounded-full transition-colors"
-        >
-          Calculer Mes Aides
-        </button>
+        <div className="flex gap-4">
+          {currentStep > 0 && (
+            <Button
+              type="button"
+              variant="outline"
+              className="flex-1"
+              onClick={handleBack}
+            >
+              Retour
+            </Button>
+          )}
+          <Button type="submit" className="flex-1">
+            {isLastStep ? "Calculer Mes Aides" : "Continuer"}
+          </Button>
+        </div>
 
-        <p className="text-xs text-gray-500 mt-4">
-          COOKIES CONSENT : En soumettant cette demande, vous acceptez d'être
-          contacté par téléphone et de recevoir des emails de la part des
-          partenaires pour le suivi de votre demande et la mission commerciale qui
-          peut en découler. Vous disposez du droit de vous inscrire sur la liste
-          d'opposition au démarchage téléphonique Bloctel ici. Pour en savoir plus
-          sur la gestion de vos données personnelles et exercer vos droits,
-          consultez notre{" "}
-          <a href="#" className="text-primary underline">
-            politique de confidentialité des données
-          </a>
-          .
-        </p>
+        {isLastStep && (
+          <p className="text-xs text-gray-500 mt-4">
+            COOKIES CONSENT : En soumettant cette demande, vous acceptez d'être
+            contacté par téléphone et de recevoir des emails de la part des
+            partenaires pour le suivi de votre demande et la mission commerciale qui
+            peut en découler. Vous disposez du droit de vous inscrire sur la liste
+            d'opposition au démarchage téléphonique Bloctel ici. Pour en savoir plus
+            sur la gestion de vos données personnelles et exercer vos droits,
+            consultez notre{" "}
+            <a href="#" className="text-primary underline">
+              politique de confidentialité des données
+            </a>
+            .
+          </p>
+        )}
       </form>
     </div>
   );
