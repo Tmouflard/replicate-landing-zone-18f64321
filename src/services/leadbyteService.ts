@@ -22,23 +22,28 @@ export const submitToLeadbyte = async (formData: any): Promise<any> => {
   };
 
   try {
-    // Utilisation d'un proxy CORS pour éviter les erreurs
-    const proxyUrl = 'https://corsproxy.io/?';
+    // Utilisation d'un proxy CORS différent
+    const proxyUrl = 'https://api.allorigins.win/raw?url=';
     const targetUrl = 'https://leadstudio.leadbyte.co.uk/api/submit.php?campid=POMPE-A-CHALEUR&sid=1&returnjson=yes';
     
     const response = await fetch(proxyUrl + encodeURIComponent(targetUrl), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Origin': window.location.origin,
       },
       body: JSON.stringify(leadbyteData),
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      console.error('Response not OK:', await response.text());
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    return await response.json();
+    const data = await response.json();
+    console.log('Leadbyte response:', data);
+    return data;
   } catch (error) {
     console.error('Error submitting to Leadbyte:', error);
     throw error;
