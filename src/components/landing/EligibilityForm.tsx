@@ -21,10 +21,21 @@ export const EligibilityForm = () => {
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | { target: { name: string; value: string } }
   ) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+    
+    // Automatically move to next step for radio inputs
+    const currentField = steps[currentStep].field;
+    if (currentField && name === currentField) {
+      if (currentStep < steps.length - 1) {
+        setTimeout(() => {
+          setCurrentStep(prev => prev + 1);
+        }, 300); // Small delay for better UX
+      }
+    }
   };
 
   const handleNext = () => {
