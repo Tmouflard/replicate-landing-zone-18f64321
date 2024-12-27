@@ -1,5 +1,130 @@
-<!-- Formulaire HTML -->
-<form id="leadbyteForm" onsubmit="handleSubmit(event)" class="bg-white rounded-3xl shadow-xl p-8 max-w-2xl mx-auto">
+<style>
+.form-container {
+  max-width: 42rem;
+  margin: 0 auto;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+.progress-bar {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+.progress-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #403E43;
+}
+.progress-track {
+  width: 100%;
+  background-color: rgb(229 231 235);
+  border-radius: 9999px;
+  height: 0.625rem;
+}
+.progress-fill {
+  background-color: #ea384c;
+  height: 0.625rem;
+  border-radius: 9999px;
+  transition: width 300ms ease-in-out;
+}
+.step {
+  display: none;
+}
+.step.active {
+  display: block;
+  animation: fadeIn 0.3s ease-out;
+}
+.step-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #403E43;
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid rgb(229 231 235);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 150ms;
+  line-height: 1.5;
+}
+.radio-label:hover {
+  background-color: #f8fafc;
+}
+.radio-label.selected {
+  border-color: #ea384c;
+  background-color: #fff1f2;
+}
+.input-group {
+  margin-bottom: 1rem;
+}
+.input-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #403E43;
+  margin-bottom: 0.5rem;
+}
+.text-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid rgb(229 231 235);
+  border-radius: 0.375rem;
+  font-size: 1rem;
+}
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+.button {
+  padding: 0.75rem 2rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  height: 48px;
+  font-size: 1rem;
+}
+.button-prev {
+  background-color: white;
+  border: 1px solid rgb(229 231 235);
+}
+.button-next {
+  background-color: #ea384c;
+  color: white;
+  border: none;
+}
+.button-next:hover {
+  background-color: #dc2626;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
+
+<form id="leadbyteForm" class="form-container">
   <div class="text-center mb-8">
     <h2 class="text-2xl font-bold mb-2">
       CALCULEZ VOTRE <span style="color: #ea384c;">PRIME</span>
@@ -9,155 +134,130 @@
     </p>
   </div>
 
-  <div class="mb-6">
-    <div class="flex justify-between mb-2">
-      <span class="text-sm font-medium" id="stepIndicator">Étape 1 sur 5</span>
-      <span class="text-sm font-medium" id="percentageIndicator">20%</span>
+  <div class="progress-bar">
+    <div class="progress-header">
+      <span class="progress-text">Étape <span id="currentStep">1</span>/5</span>
+      <span class="progress-text"><span id="progressPercent">20</span>%</span>
     </div>
-    <div class="w-full bg-gray-200 rounded-full h-2">
-      <div id="progressBar" class="bg-accent rounded-full h-2 transition-all duration-300" style="width: 20%; background-color: #ea384c;"></div>
+    <div class="progress-track">
+      <div class="progress-fill" style="width: 20%"></div>
     </div>
   </div>
 
   <!-- Type de chauffage -->
-  <div class="form-step active" data-step="1">
-    <h3 class="text-lg font-semibold mb-4">Type de chauffage</h3>
-    <div class="form-group space-y-4">
-      <label>Quel est votre type de chauffage actuel ?*</label>
-      <div class="grid grid-cols-1 gap-4">
-        <label class="flex items-center space-x-3 border rounded-lg p-4 cursor-pointer hover:bg-gray-50">
-          <input type="radio" name="heatingType" value="fioul" required>
-          <span>Fioul</span>
-        </label>
-        <label class="flex items-center space-x-3 border rounded-lg p-4 cursor-pointer hover:bg-gray-50">
-          <input type="radio" name="heatingType" value="gaz">
-          <span>Gaz</span>
-        </label>
-        <label class="flex items-center space-x-3 border rounded-lg p-4 cursor-pointer hover:bg-gray-50">
-          <input type="radio" name="heatingType" value="electrique">
-          <span>Électrique</span>
-        </label>
-      </div>
+  <div class="step active" data-step="1">
+    <h2 class="step-title">Type de chauffage</h2>
+    <div class="radio-group">
+      <label class="radio-label">
+        <input type="radio" name="heatingType" value="fioul" required>
+        Fioul
+      </label>
+      <label class="radio-label">
+        <input type="radio" name="heatingType" value="gaz">
+        Gaz
+      </label>
+      <label class="radio-label">
+        <input type="radio" name="heatingType" value="electrique">
+        Électrique
+      </label>
     </div>
   </div>
 
   <!-- Revenu fiscal -->
-  <div class="form-step hidden" data-step="2">
-    <h3 class="text-lg font-semibold mb-4">Revenu fiscal</h3>
-    <div class="form-group space-y-4">
-      <label>Quel est votre revenu fiscal de référence ?*</label>
-      <div class="grid grid-cols-1 gap-4">
-        <label class="flex items-center space-x-3 border rounded-lg p-4 cursor-pointer hover:bg-gray-50">
-          <input type="radio" name="income" value="0-15250" required>
-          <span>0 € - 15 250 €</span>
-        </label>
-        <label class="flex items-center space-x-3 border rounded-lg p-4 cursor-pointer hover:bg-gray-50">
-          <input type="radio" name="income" value="15251-30000">
-          <span>15 251 € - 30 000 €</span>
-        </label>
-        <label class="flex items-center space-x-3 border rounded-lg p-4 cursor-pointer hover:bg-gray-50">
-          <input type="radio" name="income" value="30001+">
-          <span>Plus de 30 000 €</span>
-        </label>
-      </div>
+  <div class="step" data-step="2">
+    <h2 class="step-title">Revenu fiscal</h2>
+    <div class="radio-group">
+      <label class="radio-label">
+        <input type="radio" name="income" value="0-15250" required>
+        0 € - 15 250 €
+      </label>
+      <label class="radio-label">
+        <input type="radio" name="income" value="15251-30000">
+        15 251 € - 30 000 €
+      </label>
+      <label class="radio-label">
+        <input type="radio" name="income" value="30001+">
+        Plus de 30 000 €
+      </label>
     </div>
   </div>
 
   <!-- Composition du foyer -->
-  <div class="form-step hidden" data-step="3">
-    <h3 class="text-lg font-semibold mb-4">Composition du foyer</h3>
-    <div class="form-group space-y-4">
-      <label>Combien de personnes composent votre foyer ?*</label>
-      <div class="grid grid-cols-3 gap-4">
-        <label class="flex items-center justify-center border rounded-lg p-4 cursor-pointer hover:bg-gray-50">
-          <input type="radio" name="householdSize" value="1" required>
-          <span class="ml-2">1</span>
-        </label>
-        <label class="flex items-center justify-center border rounded-lg p-4 cursor-pointer hover:bg-gray-50">
-          <input type="radio" name="householdSize" value="2">
-          <span class="ml-2">2</span>
-        </label>
-        <label class="flex items-center justify-center border rounded-lg p-4 cursor-pointer hover:bg-gray-50">
-          <input type="radio" name="householdSize" value="3">
-          <span class="ml-2">3</span>
-        </label>
-        <label class="flex items-center justify-center border rounded-lg p-4 cursor-pointer hover:bg-gray-50">
-          <input type="radio" name="householdSize" value="4">
-          <span class="ml-2">4</span>
-        </label>
-        <label class="flex items-center justify-center border rounded-lg p-4 cursor-pointer hover:bg-gray-50">
-          <input type="radio" name="householdSize" value="5">
-          <span class="ml-2">5</span>
-        </label>
-        <label class="flex items-center justify-center border rounded-lg p-4 cursor-pointer hover:bg-gray-50">
-          <input type="radio" name="householdSize" value="plus de 5">
-          <span class="ml-2">+5</span>
-        </label>
-      </div>
+  <div class="step" data-step="3">
+    <h2 class="step-title">Composition du foyer</h2>
+    <div class="radio-group">
+      <label class="radio-label">
+        <input type="radio" name="householdSize" value="1" required>
+        1 personne
+      </label>
+      <label class="radio-label">
+        <input type="radio" name="householdSize" value="2">
+        2 personnes
+      </label>
+      <label class="radio-label">
+        <input type="radio" name="householdSize" value="3">
+        3 personnes
+      </label>
+      <label class="radio-label">
+        <input type="radio" name="householdSize" value="4">
+        4 personnes
+      </label>
+      <label class="radio-label">
+        <input type="radio" name="householdSize" value="5">
+        5 personnes
+      </label>
+      <label class="radio-label">
+        <input type="radio" name="householdSize" value="plus de 5">
+        Plus de 5 personnes
+      </label>
     </div>
   </div>
 
   <!-- Propriétaire -->
-  <div class="form-step hidden" data-step="4">
-    <h3 class="text-lg font-semibold mb-4">Propriétaire</h3>
-    <div class="form-group space-y-4">
-      <label>Êtes-vous propriétaire de votre logement ?*</label>
-      <div class="grid grid-cols-2 gap-4">
-        <label class="flex items-center justify-center border rounded-lg p-4 cursor-pointer hover:bg-gray-50">
-          <input type="radio" name="isOwner" value="oui" required>
-          <span class="ml-2">Oui</span>
-        </label>
-        <label class="flex items-center justify-center border rounded-lg p-4 cursor-pointer hover:bg-gray-50">
-          <input type="radio" name="isOwner" value="non">
-          <span class="ml-2">Non</span>
-        </label>
-      </div>
+  <div class="step" data-step="4">
+    <h2 class="step-title">Propriétaire</h2>
+    <div class="radio-group">
+      <label class="radio-label">
+        <input type="radio" name="isOwner" value="oui" required>
+        Oui
+      </label>
+      <label class="radio-label">
+        <input type="radio" name="isOwner" value="non">
+        Non
+      </label>
     </div>
   </div>
 
   <!-- Coordonnées -->
-  <div class="form-step hidden" data-step="5">
-    <h3 class="text-lg font-semibold mb-4">Vos coordonnées</h3>
-    <div class="space-y-4">
-      <div class="form-group">
-        <label>Nom et Prénom*</label>
-        <input type="text" name="name" required class="w-full rounded-md border border-gray-300 p-2">
-      </div>
-
-      <div class="form-group">
-        <label>Email*</label>
-        <input type="email" name="email" required class="w-full rounded-md border border-gray-300 p-2">
-      </div>
-
-      <div class="form-group">
-        <label>Code Postal*</label>
-        <input type="text" name="postal" pattern="^(?:0[1-9]|[1-8][0-9]|9[0-5]|97|98|99)[0-9]{3}$" required class="w-full rounded-md border border-gray-300 p-2">
-      </div>
-
-      <div class="form-group">
-        <label>Téléphone*</label>
-        <input type="tel" name="phone" pattern="^0[1-9][0-9]{8}$" required class="w-full rounded-md border border-gray-300 p-2">
-      </div>
-
-      <div class="flex items-start space-x-2 mt-4">
-        <input type="checkbox" name="cookiesConsent" required class="mt-1">
-        <label class="text-xs text-gray-500">
-          En soumettant cette demande, vous acceptez d'être contacté par téléphone et de recevoir des emails...
-        </label>
-      </div>
+  <div class="step" data-step="5">
+    <h2 class="step-title">Vos coordonnées</h2>
+    <div class="input-group">
+      <label class="input-label">Nom et Prénom *</label>
+      <input type="text" name="name" class="text-input" required>
+    </div>
+    <div class="input-group">
+      <label class="input-label">Email *</label>
+      <input type="email" name="email" class="text-input" required>
+    </div>
+    <div class="input-group">
+      <label class="input-label">Code Postal *</label>
+      <input type="text" name="postal" class="text-input" required pattern="^(?:0[1-9]|[1-8][0-9]|9[0-5]|97|98|99)[0-9]{3}$">
+    </div>
+    <div class="input-group">
+      <label class="input-label">Téléphone *</label>
+      <input type="tel" name="phone" class="text-input" required pattern="^0[1-9][0-9]{8}$">
+    </div>
+    <div class="checkbox-group">
+      <input type="checkbox" id="cookiesConsent" name="cookiesConsent" required>
+      <label for="cookiesConsent" class="text-sm">
+        En soumettant cette demande, vous acceptez d'être contacté par téléphone et de recevoir des emails...
+      </label>
     </div>
   </div>
 
-  <div class="flex gap-4 mt-6">
-    <button type="button" onclick="prevStep()" id="prevButton" class="hidden flex-1 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
-      Retour
-    </button>
-    <button type="button" onclick="nextStep()" id="nextButton" class="flex-1 px-4 py-2 bg-accent text-white rounded-md hover:bg-accent/90" style="background-color: #ea384c;">
-      Continuer
-    </button>
-    <button type="submit" id="submitButton" class="hidden flex-1 px-4 py-2 bg-accent text-white rounded-md hover:bg-accent/90" style="background-color: #ea384c;">
-      Calculer Mes Aides
-    </button>
+  <div class="button-group">
+    <button type="button" class="button button-prev" id="prevButton" style="display: none;">Retour</button>
+    <button type="button" class="button button-next" id="nextButton">Continuer</button>
   </div>
 </form>
 
@@ -167,25 +267,22 @@ const totalSteps = 5;
 
 function updateProgress() {
   const progress = (currentStep / totalSteps) * 100;
-  document.getElementById('progressBar').style.width = `${progress}%`;
-  document.getElementById('stepIndicator').textContent = `Étape ${currentStep} sur ${totalSteps}`;
-  document.getElementById('percentageIndicator').textContent = `${Math.round(progress)}%`;
+  document.querySelector('.progress-fill').style.width = `${progress}%`;
+  document.getElementById('currentStep').textContent = currentStep;
+  document.getElementById('progressPercent').textContent = Math.round(progress);
 }
 
 function showStep(step) {
-  document.querySelectorAll('.form-step').forEach(el => {
-    el.classList.add('hidden');
+  document.querySelectorAll('.step').forEach(el => {
+    el.classList.remove('active');
   });
-  document.querySelector(`[data-step="${step}"]`).classList.remove('hidden');
+  document.querySelector(`[data-step="${step}"]`).classList.add('active');
   
-  // Gestion des boutons
   const prevButton = document.getElementById('prevButton');
   const nextButton = document.getElementById('nextButton');
-  const submitButton = document.getElementById('submitButton');
   
   prevButton.style.display = step === 1 ? 'none' : 'block';
-  nextButton.style.display = step === totalSteps ? 'none' : 'block';
-  submitButton.style.display = step === totalSteps ? 'block' : 'none';
+  nextButton.textContent = step === totalSteps ? 'Calculer Mes Aides' : 'Continuer';
   
   updateProgress();
 }
@@ -205,17 +302,21 @@ function validateCurrentStep() {
     }
   });
 
+  if (!isValid) {
+    alert('Veuillez remplir tous les champs obligatoires');
+  }
   return isValid;
 }
 
 function nextStep() {
   if (!validateCurrentStep()) {
-    alert('Veuillez remplir tous les champs obligatoires');
     return;
   }
   if (currentStep < totalSteps) {
     currentStep++;
     showStep(currentStep);
+  } else {
+    handleSubmit();
   }
 }
 
@@ -235,25 +336,25 @@ function isValidFrenchPostalCode(postal) {
   return /^(?:0[1-9]|[1-8][0-9]|9[0-5]|97|98|99)[0-9]{3}$/.test(postal);
 }
 
-async function handleSubmit(event) {
-  event.preventDefault();
-  
-  const form = event.target;
+async function handleSubmit() {
+  const form = document.getElementById('leadbyteForm');
   const formData = new FormData(form);
   
-  // Validation du téléphone
+  if (!formData.get('cookiesConsent')) {
+    alert('Veuillez accepter les conditions d\'utilisation');
+    return;
+  }
+
   if (!isValidFrenchPhoneNumber(formData.get('phone'))) {
     alert('Veuillez entrer un numéro de téléphone français valide');
     return;
   }
 
-  // Validation du code postal
   if (!isValidFrenchPostalCode(formData.get('postal'))) {
     alert('Veuillez entrer un code postal français valide');
     return;
   }
 
-  // Préparation des données pour Leadbyte
   const [firstName, ...lastNameParts] = formData.get('name').split(' ');
   
   const leadbyteData = new URLSearchParams({
@@ -265,7 +366,7 @@ async function handleSubmit(event) {
     chauffage: formData.get('heatingType'),
     proprietaire: formData.get('isOwner') === 'oui' ? 'Propriétaire' : 'Locataire',
     habitation: formData.get('householdSize'),
-    campid: 'POMPE-A-CHALEUR', // Remplacez par votre CAMPID
+    campid: 'POMPE-A-CHALEUR',
     sid: '1',
     returnjson: 'yes'
   });
@@ -281,12 +382,9 @@ async function handleSubmit(event) {
 
     const data = await response.json();
     console.log('Leadbyte response:', data);
-    
-    // Redirection dans tous les cas
     window.location.href = "https://experts-renovation.com/merci-pac/";
   } catch (error) {
     console.error('Error:', error);
-    // Redirection même en cas d'erreur
     window.location.href = "https://experts-renovation.com/merci-pac/";
   }
 }
@@ -295,9 +393,23 @@ async function handleSubmit(event) {
 document.addEventListener('DOMContentLoaded', () => {
   showStep(1);
   
+  document.getElementById('nextButton').addEventListener('click', nextStep);
+  document.getElementById('prevButton').addEventListener('click', prevStep);
+  
   // Auto-advance on radio selection
   document.querySelectorAll('input[type="radio"]').forEach(radio => {
     radio.addEventListener('change', () => {
+      const label = radio.closest('.radio-label');
+      if (label) {
+        // Remove selected class from all labels in the same group
+        const name = radio.name;
+        document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+          r.closest('.radio-label').classList.remove('selected');
+        });
+        // Add selected class to the clicked label
+        label.classList.add('selected');
+      }
+      
       if (currentStep < totalSteps) {
         setTimeout(() => {
           nextStep();
@@ -307,73 +419,3 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
-
-<style>
-.form-group {
-  margin-bottom: 20px;
-}
-
-label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: 500;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="tel"] {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.hidden {
-  display: none;
-}
-
-/* Animation de transition */
-.form-step {
-  transition: opacity 0.3s ease-in-out;
-}
-
-.form-step.hidden {
-  opacity: 0;
-}
-
-.form-step:not(.hidden) {
-  opacity: 1;
-}
-
-/* Style des boutons radio */
-input[type="radio"] {
-  margin-right: 8px;
-}
-
-/* Style du bouton */
-button {
-  background-color: #ea384c;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.2s;
-}
-
-button:hover {
-  background-color: #d62d3f;
-}
-
-button[type="button"] {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  color: #333;
-}
-
-button[type="button"]:hover {
-  background-color: #f5f5f5;
-}
-</style>
