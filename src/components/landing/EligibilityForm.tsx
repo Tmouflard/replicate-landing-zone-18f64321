@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { submitToLeadbyte } from "@/services/leadbyteService";
+import { isValidFrenchPhoneNumber, isValidFrenchPostalCode } from "@/utils/validators";
 
 export const EligibilityForm = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -44,7 +45,7 @@ export const EligibilityForm = () => {
   const handleNext = () => {
     const currentField = steps[currentStep].field || steps[currentStep].fields?.[0];
     if (!formData[currentField as keyof typeof formData]) {
-      toast.error("Veuillez répondre à la question pour continuer");
+      toast.error("Cette question est obligatoire");
       return;
     }
     if (currentStep < steps.length - 1) {
@@ -62,12 +63,26 @@ export const EligibilityForm = () => {
     e.preventDefault();
     const lastStep = steps[steps.length - 1];
     const requiredFields = lastStep.fields || [lastStep.field];
+    
+    // Vérification des champs obligatoires
     const isValid = requiredFields.every(
       (field) => formData[field as keyof typeof formData]
     );
 
     if (!isValid) {
-      toast.error("Veuillez remplir tous les champs obligatoires");
+      toast.error("Tous les champs sont obligatoires");
+      return;
+    }
+
+    // Validation du numéro de téléphone français
+    if (!isValidFrenchPhoneNumber(formData.phone)) {
+      toast.error("Veuillez entrer un numéro de téléphone français valide");
+      return;
+    }
+
+    // Validation du code postal français
+    if (!isValidFrenchPostalCode(formData.postal)) {
+      toast.error("Veuillez entrer un code postal français valide");
       return;
     }
 
@@ -93,13 +108,14 @@ export const EligibilityForm = () => {
       field: "heatingType",
       component: (
         <div className="space-y-4">
-          <Label>Quel est votre type de chauffage actuel ?</Label>
+          <Label>Quel est votre type de chauffage actuel ?*</Label>
           <RadioGroup
             value={formData.heatingType}
             onValueChange={(value) =>
               handleInputChange({ target: { name: "heatingType", value } })
             }
             className="grid grid-cols-1 gap-4"
+            required
           >
             {["Fioul", "Gaz", "Électrique"].map((type) => (
               <label
@@ -119,13 +135,14 @@ export const EligibilityForm = () => {
       field: "income",
       component: (
         <div className="space-y-4">
-          <Label>Quel est votre revenu fiscal de référence ?</Label>
+          <Label>Quel est votre revenu fiscal de référence ?*</Label>
           <RadioGroup
             value={formData.income}
             onValueChange={(value) =>
               handleInputChange({ target: { name: "income", value } })
             }
             className="grid grid-cols-1 gap-4"
+            required
           >
             {[
               { label: "0 € - 15 250 €", value: "0-15250" },
@@ -149,13 +166,14 @@ export const EligibilityForm = () => {
       field: "householdSize",
       component: (
         <div className="space-y-4">
-          <Label>Combien de personnes composent votre foyer ?</Label>
+          <Label>Combien de personnes composent votre foyer ?*</Label>
           <RadioGroup
             value={formData.householdSize}
             onValueChange={(value) =>
               handleInputChange({ target: { name: "householdSize", value } })
             }
             className="grid grid-cols-3 gap-4"
+            required
           >
             {[1, 2, 3, 4, 5, "plus de 5"].map((number) => (
               <label
@@ -175,13 +193,14 @@ export const EligibilityForm = () => {
       field: "isOwner",
       component: (
         <div className="space-y-4">
-          <Label>Êtes-vous propriétaire de votre logement ?</Label>
+          <Label>Êtes-vous propriétaire de votre logement ?*</Label>
           <RadioGroup
             value={formData.isOwner}
             onValueChange={(value) =>
               handleInputChange({ target: { name: "isOwner", value } })
             }
             className="grid grid-cols-2 gap-4"
+            required
           >
             {[
               { label: "Oui", value: "oui" },
@@ -205,7 +224,7 @@ export const EligibilityForm = () => {
       component: (
         <div className="space-y-4">
           <div>
-            <Label htmlFor="name">Nom et Prénom</Label>
+            <Label htmlFor="name">Nom et Prénom*</Label>
             <Input
               id="name"
               type="text"
@@ -217,7 +236,7 @@ export const EligibilityForm = () => {
             />
           </div>
           <div>
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">Email*</Label>
             <Input
               id="email"
               type="email"
@@ -229,7 +248,7 @@ export const EligibilityForm = () => {
             />
           </div>
           <div>
-            <Label htmlFor="postal">Code Postal</Label>
+            <Label htmlFor="postal">Code Postal*</Label>
             <Input
               id="postal"
               type="text"
@@ -238,10 +257,12 @@ export const EligibilityForm = () => {
               placeholder="75000"
               onChange={handleInputChange}
               required
+              pattern="^(?:0[1-9]|[1-8][0-9]|9[0-5]|97|98|99)[0-9]{3}$"
+              title="Veuillez entrer un code postal français valide"
             />
           </div>
           <div>
-            <Label htmlFor="phone">Téléphone</Label>
+            <Label htmlFor="phone">Téléphone*</Label>
             <Input
               id="phone"
               type="tel"
@@ -250,6 +271,8 @@ export const EligibilityForm = () => {
               placeholder="06 12 34 56 78"
               onChange={handleInputChange}
               required
+              pattern="^0[1-9][0-9]{8}$"
+              title="Veuillez entrer un numéro de téléphone français valide"
             />
           </div>
         </div>
