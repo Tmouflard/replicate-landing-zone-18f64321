@@ -1,0 +1,177 @@
+<!-- Formulaire HTML -->
+<form id="leadbyteForm" onsubmit="handleSubmit(event)">
+  <!-- Type de chauffage -->
+  <div class="form-group">
+    <label>Quel est votre type de chauffage actuel ?*</label>
+    <div>
+      <input type="radio" name="heatingType" value="fioul" required> Fioul
+      <input type="radio" name="heatingType" value="gaz"> Gaz
+      <input type="radio" name="heatingType" value="electrique"> Électrique
+    </div>
+  </div>
+
+  <!-- Revenu fiscal -->
+  <div class="form-group">
+    <label>Quel est votre revenu fiscal de référence ?*</label>
+    <div>
+      <input type="radio" name="income" value="0-15250" required> 0 € - 15 250 €
+      <input type="radio" name="income" value="15251-30000"> 15 251 € - 30 000 €
+      <input type="radio" name="income" value="30001+"> Plus de 30 000 €
+    </div>
+  </div>
+
+  <!-- Composition du foyer -->
+  <div class="form-group">
+    <label>Combien de personnes composent votre foyer ?*</label>
+    <div>
+      <input type="radio" name="householdSize" value="1" required> 1
+      <input type="radio" name="householdSize" value="2"> 2
+      <input type="radio" name="householdSize" value="3"> 3
+      <input type="radio" name="householdSize" value="4"> 4
+      <input type="radio" name="householdSize" value="5"> 5
+      <input type="radio" name="householdSize" value="plus de 5"> Plus de 5
+    </div>
+  </div>
+
+  <!-- Propriétaire -->
+  <div class="form-group">
+    <label>Êtes-vous propriétaire de votre logement ?*</label>
+    <div>
+      <input type="radio" name="isOwner" value="oui" required> Oui
+      <input type="radio" name="isOwner" value="non"> Non
+    </div>
+  </div>
+
+  <!-- Coordonnées -->
+  <div class="form-group">
+    <label>Nom et Prénom*</label>
+    <input type="text" name="name" required>
+  </div>
+
+  <div class="form-group">
+    <label>Email*</label>
+    <input type="email" name="email" required>
+  </div>
+
+  <div class="form-group">
+    <label>Code Postal*</label>
+    <input type="text" name="postal" pattern="^(?:0[1-9]|[1-8][0-9]|9[0-5]|97|98|99)[0-9]{3}$" required>
+  </div>
+
+  <div class="form-group">
+    <label>Téléphone*</label>
+    <input type="tel" name="phone" pattern="^0[1-9][0-9]{8}$" required>
+  </div>
+
+  <!-- Consentement -->
+  <div class="form-group">
+    <input type="checkbox" name="cookiesConsent" required>
+    <label>
+      En soumettant cette demande, vous acceptez d'être contacté par téléphone et de recevoir des emails...
+    </label>
+  </div>
+
+  <button type="submit">Calculer Mes Aides</button>
+</form>
+
+<!-- Script JavaScript -->
+<script>
+function isValidFrenchPhoneNumber(phone) {
+  const cleanPhone = phone.replace(/[\s-]/g, '');
+  return /^0[1-9][0-9]{8}$/.test(cleanPhone);
+}
+
+function isValidFrenchPostalCode(postal) {
+  return /^(?:0[1-9]|[1-8][0-9]|9[0-5]|97|98|99)[0-9]{3}$/.test(postal);
+}
+
+async function handleSubmit(event) {
+  event.preventDefault();
+  
+  const form = event.target;
+  const formData = new FormData(form);
+  
+  // Validation du téléphone
+  if (!isValidFrenchPhoneNumber(formData.get('phone'))) {
+    alert('Veuillez entrer un numéro de téléphone français valide');
+    return;
+  }
+
+  // Validation du code postal
+  if (!isValidFrenchPostalCode(formData.get('postal'))) {
+    alert('Veuillez entrer un code postal français valide');
+    return;
+  }
+
+  // Préparation des données pour Leadbyte
+  const [firstName, ...lastNameParts] = formData.get('name').split(' ');
+  
+  const leadbyteData = new URLSearchParams({
+    firstname: firstName,
+    lastname: lastNameParts.join(' '),
+    email: formData.get('email'),
+    phone1: formData.get('phone'),
+    postcode: formData.get('postal'),
+    chauffage: formData.get('heatingType'),
+    proprietaire: formData.get('isOwner') === 'oui' ? 'Propriétaire' : 'Locataire',
+    habitation: formData.get('householdSize'),
+    campid: 'POMPE-A-CHALEUR', // Remplacez par votre CAMPID
+    sid: '1',
+    returnjson: 'yes'
+  });
+
+  try {
+    const response = await fetch('https://leadstudio.leadbyte.co.uk/api/submit.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: leadbyteData
+    });
+
+    const data = await response.json();
+    console.log('Leadbyte response:', data);
+    
+    // Redirection dans tous les cas
+    window.location.href = "https://experts-renovation.com/merci-pac/";
+  } catch (error) {
+    console.error('Error:', error);
+    // Redirection même en cas d'erreur
+    window.location.href = "https://experts-renovation.com/merci-pac/";
+  }
+}
+</script>
+
+<style>
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+</style>
