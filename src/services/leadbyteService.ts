@@ -10,7 +10,6 @@ interface LeadbyteData {
 }
 
 export const submitToLeadbyte = async (formData: any): Promise<any> => {
-  // Mapping des données du formulaire vers le format Leadbyte exactement comme dans le formulaire HTML
   const [firstName, ...lastNameParts] = formData.name.split(' ');
   
   const leadbyteData: LeadbyteData = {
@@ -38,22 +37,23 @@ export const submitToLeadbyte = async (formData: any): Promise<any> => {
       }).toString()
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Leadbyte error response:', errorText);
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
     const data = await response.json();
     console.log('Leadbyte response:', data);
     
-    // On considère la réponse comme un succès si nous n'avons pas d'erreur
+    // On redirige dans tous les cas
+    window.location.href = "https://experts-renovation.com/merci-pac/";
+    
     return {
-      success: !data.code || data.code === 0,
-      ...data
+      success: true,
+      data
     };
   } catch (error) {
     console.error('Error submitting to Leadbyte:', error);
-    throw error;
+    // On redirige même en cas d'erreur
+    window.location.href = "https://experts-renovation.com/merci-pac/";
+    return {
+      success: false,
+      error
+    };
   }
 };

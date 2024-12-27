@@ -77,17 +77,13 @@ export const EligibilityForm = () => {
     }
 
     try {
-      const response = await submitToLeadbyte(formData);
-      if (response.success) {
-        toast.success("Votre demande a été envoyée avec succès!");
-        // Redirection vers la page de remerciement
-        window.location.href = "https://experts-renovation.com/merci-pac/";
-      } else {
-        toast.error("Une erreur est survenue lors de l'envoi de votre demande");
-      }
+      await submitToLeadbyte(formData);
+      toast.success("Votre demande a été envoyée avec succès!");
+      // La redirection est maintenant gérée dans le service
     } catch (error) {
       console.error('Error:', error);
-      toast.error("Une erreur est survenue lors de l'envoi de votre demande");
+      // Pas besoin de toast d'erreur puisqu'on redirige dans tous les cas
+      // La redirection est gérée dans le service
     }
   };
 
