@@ -80,6 +80,8 @@ export const EligibilityForm = () => {
       const response = await submitToLeadbyte(formData);
       if (response.success) {
         toast.success("Votre demande a été envoyée avec succès!");
+        // Redirection vers la page de remerciement
+        window.location.href = "https://experts-renovation.com/merci-pac/";
       } else {
         toast.error("Une erreur est survenue lors de l'envoi de votre demande");
       }

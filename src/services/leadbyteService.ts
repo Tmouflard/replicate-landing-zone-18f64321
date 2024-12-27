@@ -11,10 +11,12 @@ interface LeadbyteData {
 
 export const submitToLeadbyte = async (formData: any): Promise<any> => {
   // Mapping des données du formulaire vers le format Leadbyte
+  const [firstName, ...lastNameParts] = formData.name.split(' ');
+  
   const leadbyteData: LeadbyteData = {
     email: formData.email,
-    firstname: formData.name.split(' ')[0],
-    lastname: formData.name.split(' ').slice(1).join(' '),
+    firstname: firstName,
+    lastname: lastNameParts.join(' '),
     postcode: formData.postal,
     chauffage: formData.heatingType,
     proprietaire: formData.isOwner === 'oui' ? 'yes' : 'no',
@@ -22,7 +24,6 @@ export const submitToLeadbyte = async (formData: any): Promise<any> => {
   };
 
   try {
-    // Utilisation d'un proxy CORS différent
     const proxyUrl = 'https://api.allorigins.win/raw?url=';
     const targetUrl = 'https://leadstudio.leadbyte.co.uk/api/submit.php?campid=POMPE-A-CHALEUR&sid=1&returnjson=yes';
     
