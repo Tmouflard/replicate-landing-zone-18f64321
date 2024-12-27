@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
+import { submitToLeadbyte } from "@/services/leadbyteService";
 
 export const EligibilityForm = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -57,7 +58,7 @@ export const EligibilityForm = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const lastStep = steps[steps.length - 1];
     const requiredFields = lastStep.fields || [lastStep.field];
@@ -75,7 +76,17 @@ export const EligibilityForm = () => {
       return;
     }
 
-    toast.success("Votre demande a été envoyée avec succès!");
+    try {
+      const response = await submitToLeadbyte(formData);
+      if (response.success) {
+        toast.success("Votre demande a été envoyée avec succès!");
+      } else {
+        toast.error("Une erreur est survenue lors de l'envoi de votre demande");
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error("Une erreur est survenue lors de l'envoi de votre demande");
+    }
   };
 
   const steps = [
