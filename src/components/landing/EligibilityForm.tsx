@@ -18,6 +18,48 @@ export const EligibilityForm = () => {
     phone: "",
   });
 
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | { target: { name: string; value: string } }
+  ) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleNext = () => {
+    const currentField = steps[currentStep].field || steps[currentStep].fields?.[0];
+    if (!formData[currentField as keyof typeof formData]) {
+      toast.error("Veuillez répondre à la question pour continuer");
+      return;
+    }
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handleBack = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const lastStep = steps[steps.length - 1];
+    const requiredFields = lastStep.fields || [lastStep.field];
+    const isValid = requiredFields.every(
+      (field) => formData[field as keyof typeof formData]
+    );
+
+    if (!isValid) {
+      toast.error("Veuillez remplir tous les champs obligatoires");
+      return;
+    }
+
+    toast.success("Votre demande a été envoyée avec succès!");
+  };
+
   const steps = [
     {
       title: "Type de chauffage",
@@ -187,48 +229,6 @@ export const EligibilityForm = () => {
       ),
     },
   ];
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | { target: { name: string; value: string } }
-  ) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleNext = () => {
-    const currentField = steps[currentStep].field || steps[currentStep].fields?.[0];
-    if (!formData[currentField as keyof typeof formData]) {
-      toast.error("Veuillez répondre à la question pour continuer");
-      return;
-    }
-    if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
-    }
-  };
-
-  const handleBack = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const lastStep = steps[steps.length - 1];
-    const requiredFields = lastStep.fields || [lastStep.field];
-    const isValid = requiredFields.every(
-      (field) => formData[field as keyof typeof formData]
-    );
-
-    if (!isValid) {
-      toast.error("Veuillez remplir tous les champs obligatoires");
-      return;
-    }
-
-    toast.success("Votre demande a été envoyée avec succès!");
-  };
 
   const currentStepData = steps[currentStep];
   const isLastStep = currentStep === steps.length - 1;
