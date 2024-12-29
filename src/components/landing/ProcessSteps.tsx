@@ -1,4 +1,4 @@
-import { MousePointer, CheckSquare, Calendar, AirConditioner } from "lucide-react";
+import { MousePointer, CheckSquare, Calendar, Fan } from "lucide-react";
 
 const steps = [
   {
@@ -14,7 +14,7 @@ const steps = [
     title: "3. Prise de rendez-vous pour l'installation",
   },
   {
-    icon: AirConditioner,
+    icon: Fan,
     title: "4. Mise en place de votre Pompe à Chaleur",
   },
 ];
