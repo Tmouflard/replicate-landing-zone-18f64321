@@ -11,7 +11,7 @@ export const HeroSection = () => {
         <span className="text-gray-600">sur 3 261 avis</span>
       </div>
 
-      <h1 className="text-4xl md:text-5xl font-bold leading-tight space-y-4">
+      <h1 className="text-3xl md:text-5xl font-bold leading-tight space-y-4">
         <div>
           L'État finance votre{" "}
           <span className="bg-primary text-white px-2">Pompe à Chaleur</span>
