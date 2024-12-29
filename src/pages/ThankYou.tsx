@@ -39,7 +39,7 @@ const ThankYou = () => {
       document.body.removeChild(script2);
       document.body.removeChild(script3);
     };
-  }, []); // Empty dependency array means this runs once when component mounts
+  }, []);
 
   return (
     <div className="min-h-screen bg-page-gradient">
@@ -97,7 +97,7 @@ const ThankYou = () => {
             className="inline-block w-full max-w-2xl mx-auto"
           >
             <div className="bg-[#7AC943] text-white text-2xl md:text-3xl font-bold py-6 px-8 rounded-2xl shadow-lg hover:bg-[#69b339] transition-colors text-center leading-tight">
-              Découvrir le Montant de Votre Prime Renov' {'>>'} 
+              Découvrir le Montant de Votre Prime Renov{'>>'}
             </div>
           </a>
 
