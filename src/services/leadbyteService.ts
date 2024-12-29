@@ -40,8 +40,8 @@ export const submitToLeadbyte = async (formData: any): Promise<any> => {
     const data = await response.json();
     console.log('Leadbyte response:', data);
     
-    // On redirige dans tous les cas
-    window.location.href = "https://experts-renovation.com/merci-pac/";
+    // Redirection vers la page de remerciement interne
+    window.location.href = "/merci";
     
     return {
       success: true,
@@ -49,8 +49,8 @@ export const submitToLeadbyte = async (formData: any): Promise<any> => {
     };
   } catch (error) {
     console.error('Error submitting to Leadbyte:', error);
-    // On redirige même en cas d'erreur
-    window.location.href = "https://experts-renovation.com/merci-pac/";
+    // Redirection même en cas d'erreur
+    window.location.href = "/merci";
     return {
       success: false,
       error
