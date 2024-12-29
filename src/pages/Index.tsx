@@ -7,9 +7,9 @@ import { BenefitsSection } from "@/components/landing/BenefitsSection";
 const Index = () => {
   return (
     <div className="min-h-screen bg-page-gradient">
-      <div className="container mx-auto min-h-screen flex items-start pt-8 lg:pt-16 px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start w-full">
-          <div className="space-y-8">
+      <div className="container mx-auto min-h-screen flex items-start pt-12 lg:pt-24 px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start w-full">
+          <div className="space-y-12">
             <HeroSection />
             <div className="hidden md:block">
               <BenefitsList />
