@@ -2,8 +2,45 @@ import { CheckCircle2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useEffect } from "react";
 
 const ThankYou = () => {
+  useEffect(() => {
+    // Add Google Analytics base script
+    const script1 = document.createElement('script');
+    script1.src = "https://www.googletagmanager.com/gtag/js?id=AW-16703428383";
+    script1.async = true;
+    document.body.appendChild(script1);
+
+    // Add Google Analytics configuration script
+    const script2 = document.createElement('script');
+    script2.text = `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'AW-16703428383');
+    `;
+    document.body.appendChild(script2);
+
+    // Add conversion tracking script
+    const script3 = document.createElement('script');
+    script3.text = `
+      gtag('event', 'conversion', {
+        'send_to': 'AW-16703428383/uCjrCKP3gdMZEJ-u6Jw-',
+        'value': 1.0,
+        'currency': 'EUR'
+      });
+    `;
+    document.body.appendChild(script3);
+
+    // Cleanup function to remove scripts when component unmounts
+    return () => {
+      document.body.removeChild(script1);
+      document.body.removeChild(script2);
+      document.body.removeChild(script3);
+    };
+  }, []); // Empty dependency array means this runs once when component mounts
+
   return (
     <div className="min-h-screen bg-page-gradient">
       <Header />
