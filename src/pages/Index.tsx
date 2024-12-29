@@ -10,11 +10,6 @@ const Index = () => {
           <div className="space-y-6">
             <HeroSection />
             <BenefitsList />
-            <img
-              src="/lovable-uploads/bb9b99c3-6d49-441f-b74e-fee12461c6c0.png"
-              alt="Professional"
-              className="max-w-sm ml-auto"
-            />
           </div>
           <EligibilityForm />
         </div>
