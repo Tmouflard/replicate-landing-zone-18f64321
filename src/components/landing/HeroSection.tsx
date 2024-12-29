@@ -22,7 +22,7 @@ export const HeroSection = () => {
         </div>
       </h1>
 
-      <p className="text-xl text-gray-700">
+      <p className="hidden md:block text-xl text-gray-700">
         Ne laissez pas l'hiver vous surprendre. Agissez dès aujourd'hui
         pour un confort optimal et des économies durables.
       </p>

@@ -7,12 +7,16 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-page-gradient p-4 md:p-8">
       <div className="container mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           <div className="space-y-6">
             <HeroSection />
-            <BenefitsList />
+            <div className="hidden md:block">
+              <BenefitsList />
+            </div>
           </div>
-          <EligibilityForm />
+          <div className="lg:sticky lg:top-8">
+            <EligibilityForm />
+          </div>
         </div>
         <ProcessSteps />
       </div>
