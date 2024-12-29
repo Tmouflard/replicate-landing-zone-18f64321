@@ -6,7 +6,7 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <img src="/lovable-uploads/91df6bf2-1b18-48dd-bd76-6becaf38b048.png" alt="Expert Rénovation Logo" className="h-8" />
+            <img src="/lovable-uploads/e16eebd0-de69-4862-bf53-34ef4fed7970.png" alt="Expert Rénovation Logo" className="h-8" />
           </div>
           <div className="flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full">
             <MessageSquare className="w-4 h-4 text-primary" />
