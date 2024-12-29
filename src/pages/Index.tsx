@@ -1,6 +1,7 @@
 import { HeroSection } from "@/components/landing/HeroSection";
 import { BenefitsList } from "@/components/landing/BenefitsList";
 import { EligibilityForm } from "@/components/landing/EligibilityForm";
+import { ProcessSteps } from "@/components/landing/ProcessSteps";
 
 const Index = () => {
   return (
@@ -13,6 +14,7 @@ const Index = () => {
           </div>
           <EligibilityForm />
         </div>
+        <ProcessSteps />
       </div>
     </div>
   );
