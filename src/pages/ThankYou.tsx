@@ -90,6 +90,17 @@ const ThankYou = () => {
             </div>
           </Card>
 
+          <a 
+            href="https://particuliers-pompe-a-chaleur.com/maprimerenov/quel-revenu-fiscal-donne-droit-a-ma-prime-renov/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block w-full max-w-2xl mx-auto"
+          >
+            <div className="bg-[#7AC943] text-white text-2xl md:text-3xl font-bold py-6 px-8 rounded-2xl shadow-lg hover:bg-[#69b339] transition-colors text-center leading-tight">
+              Découvrir le Montant de Votre Prime Renov' >>
+            </div>
+          </a>
+
           <div className="pt-8">
             <a 
               href="/"
