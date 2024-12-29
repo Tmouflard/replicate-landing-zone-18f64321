@@ -13,7 +13,7 @@ export const HeroSection = () => {
         </div>
       </div>
 
-      <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight space-y-6 lg:space-y-8 text-center lg:text-left">
+      <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-relaxed lg:leading-loose space-y-8 lg:space-y-12 text-center lg:text-left">
         <div>
           L'État finance votre{" "}
           <span className="bg-primary text-white px-2">Pompe à Chaleur</span>
