@@ -2,6 +2,7 @@ import { HeroSection } from "@/components/landing/HeroSection";
 import { BenefitsList } from "@/components/landing/BenefitsList";
 import { EligibilityForm } from "@/components/landing/EligibilityForm";
 import { ProcessSteps } from "@/components/landing/ProcessSteps";
+import { BenefitsSection } from "@/components/landing/BenefitsSection";
 
 const Index = () => {
   return (
@@ -18,6 +19,7 @@ const Index = () => {
             <EligibilityForm />
           </div>
         </div>
+        <BenefitsSection />
         <ProcessSteps />
       </div>
     </div>
