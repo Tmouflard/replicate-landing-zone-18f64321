@@ -16,6 +16,13 @@ export const BenefitsSection = () => {
     },
   ];
 
+  const scrollToForm = () => {
+    const formElement = document.querySelector('.eligibility-form');
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="w-full bg-white mt-24">
       <div className="py-24 space-y-16">
@@ -44,7 +51,10 @@ export const BenefitsSection = () => {
         </div>
 
         <div className="text-center">
-          <button className="bg-accent hover:bg-accent/90 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors">
+          <button 
+            onClick={scrollToForm}
+            className="bg-accent hover:bg-accent/90 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors"
+          >
             REMPLIR LE FORMULAIRE D'ÉLIGIBILITÉ
           </button>
         </div>

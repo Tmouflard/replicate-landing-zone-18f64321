@@ -284,7 +284,7 @@ export const EligibilityForm = () => {
   const isLastStep = currentStep === steps.length - 1;
 
   return (
-    <div className="bg-white rounded-3xl shadow-xl p-8">
+    <div className="bg-white rounded-3xl shadow-xl p-8 eligibility-form">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold mb-2">
           CALCULEZ VOTRE <span className="text-accent">PRIME</span>
