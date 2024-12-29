@@ -39,18 +39,12 @@ export const submitToLeadbyte = async (formData: any): Promise<any> => {
 
     const data = await response.json();
     console.log('Leadbyte response:', data);
-    
-    // Redirection vers la page de remerciement interne
-    window.location.href = "/merci";
-    
     return {
       success: true,
       data
     };
   } catch (error) {
     console.error('Error submitting to Leadbyte:', error);
-    // Redirection même en cas d'erreur
-    window.location.href = "/merci";
     return {
       success: false,
       error

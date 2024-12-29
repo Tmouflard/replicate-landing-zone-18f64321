@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -9,6 +10,7 @@ import { submitToLeadbyte } from "@/services/leadbyteService";
 import { isValidFrenchPhoneNumber, isValidFrenchPostalCode } from "@/utils/validators";
 
 export const EligibilityForm = () => {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
     heatingType: "",
@@ -92,13 +94,17 @@ export const EligibilityForm = () => {
     }
 
     try {
-      await submitToLeadbyte(formData);
-      toast.success("Votre demande a été envoyée avec succès!");
-      // La redirection est maintenant gérée dans le service
+      const result = await submitToLeadbyte(formData);
+      if (result.success) {
+        navigate('/merci');
+      } else {
+        // En cas d'erreur, on redirige quand même vers la page de remerciement
+        navigate('/merci');
+      }
     } catch (error) {
       console.error('Error:', error);
-      // Pas besoin de toast d'erreur puisqu'on redirige dans tous les cas
-      // La redirection est gérée dans le service
+      // En cas d'erreur, on redirige quand même vers la page de remerciement
+      navigate('/merci');
     }
   };
 
