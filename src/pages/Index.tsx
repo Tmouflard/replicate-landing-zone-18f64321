@@ -3,6 +3,7 @@ import { BenefitsList } from "@/components/landing/BenefitsList";
 import { EligibilityForm } from "@/components/landing/EligibilityForm";
 import { ProcessSteps } from "@/components/landing/ProcessSteps";
 import { BenefitsSection } from "@/components/landing/BenefitsSection";
+import Footer from "@/components/Footer";
 
 const Index = () => {
   return (
@@ -27,6 +28,8 @@ const Index = () => {
         <BenefitsSection />
         <ProcessSteps />
       </div>
+      
+      <Footer />
     </div>
   );
 };
