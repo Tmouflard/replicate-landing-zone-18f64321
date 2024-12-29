@@ -33,7 +33,10 @@ export const submitToLeadbyte = async (formData: any): Promise<any> => {
         ...leadbyteData,
         campid: 'POMPE-A-CHALEUR',
         sid: '1',
-        returnjson: 'yes'
+        returnjson: 'yes',
+        C1: 'LP-LOVABLE',
+        C2: 'https://france-action-ecologie.com/',
+        SOURCE: 'PMAX-LOVABLE'
       }).toString()
     });
 
