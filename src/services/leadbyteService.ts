@@ -6,18 +6,6 @@ export const submitToLeadbyte = async (formData: any): Promise<any> => {
   const [firstName, ...lastNameParts] = formData.name.split(' ');
   
   try {
-    console.log('Tentative de sauvegarde dans Supabase...');
-    await saveFormSubmission({
-      heating_type: formData.heatingType,
-      income: formData.income,
-      household_size: formData.householdSize,
-      is_owner: formData.isOwner,
-      name: formData.name,
-      email: formData.email,
-      postal: formData.postal,
-      phone: formData.phone,
-    });
-
     const leadbyteData = new URLSearchParams({
       firstname: firstName,
       lastname: lastNameParts.join(' '),
@@ -35,6 +23,8 @@ export const submitToLeadbyte = async (formData: any): Promise<any> => {
       SOURCE: 'PMAX-LOVABLE'
     });
 
+    let leadbyteResponse = null;
+
     try {
       const response = await fetch('https://leadstudio.leadbyte.co.uk/api/submit.php', {
         method: 'POST',
@@ -44,16 +34,28 @@ export const submitToLeadbyte = async (formData: any): Promise<any> => {
         },
         body: leadbyteData
       });
-
-      console.log('Réponse Leadbyte reçue');
-      return { success: true, data: { status: 'sent' } };
+      leadbyteResponse = { status: 'sent' };
     } catch (error) {
       console.error('Erreur lors de l\'envoi à Leadbyte:', error);
-      // On continue même si l'envoi à Leadbyte échoue
-      return { success: true, data: { status: 'sent' } };
+      leadbyteResponse = { status: 'error', error: error.message };
     }
+
+    // Sauvegarde dans Supabase avec la réponse de Leadbyte
+    await saveFormSubmission({
+      heating_type: formData.heatingType,
+      income: formData.income,
+      household_size: formData.householdSize,
+      is_owner: formData.isOwner,
+      name: formData.name,
+      email: formData.email,
+      postal: formData.postal,
+      phone: formData.phone,
+      leadbyte_response: leadbyteResponse
+    });
+
+    return { success: true, data: { status: 'sent' } };
   } catch (error) {
     console.error('Erreur dans submitToLeadbyte:', error);
     throw error;
   }
-};
+}

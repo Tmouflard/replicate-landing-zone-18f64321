@@ -14,6 +14,8 @@ export interface FormSubmission {
   email: string;
   postal: string;
   phone: string;
+  leadbyte_response?: any;
+  created_at?: string;
 }
 
 export const saveFormSubmission = async (formData: FormSubmission) => {
@@ -42,4 +44,4 @@ export const saveFormSubmission = async (formData: FormSubmission) => {
     console.error('Erreur dans saveFormSubmission:', error);
     throw error;
   }
-};
+}
