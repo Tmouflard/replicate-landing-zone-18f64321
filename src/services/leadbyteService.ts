@@ -1,4 +1,4 @@
-import { saveFormSubmission } from './supabaseService';
+import { saveFormSubmission, supabase } from './supabaseService';
 
 interface LeadbyteData {
   firstname: string;
