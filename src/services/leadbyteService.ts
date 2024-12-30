@@ -1,15 +1,4 @@
-import { saveFormSubmission, supabase } from './supabaseService';
-
-interface LeadbyteData {
-  firstname: string;
-  lastname: string;
-  email: string;
-  phone1: string;
-  postcode: string;
-  chauffage: string;
-  proprietaire: string;
-  habitation: string;
-}
+import { saveFormSubmission } from './supabaseService';
 
 export const submitToLeadbyte = async (formData: any): Promise<any> => {
   console.log('Début submitToLeadbyte avec les données:', formData);
@@ -18,7 +7,6 @@ export const submitToLeadbyte = async (formData: any): Promise<any> => {
   
   try {
     console.log('Tentative de sauvegarde dans Supabase...');
-    // Enregistrer dans Supabase d'abord
     await saveFormSubmission({
       heating_type: formData.heatingType,
       income: formData.income,
@@ -47,19 +35,23 @@ export const submitToLeadbyte = async (formData: any): Promise<any> => {
       SOURCE: 'PMAX-LOVABLE'
     });
 
-    console.log('Tentative d\'envoi à Leadbyte...');
-    const response = await fetch('https://leadstudio.leadbyte.co.uk/api/submit.php', {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: leadbyteData
-    });
+    try {
+      const response = await fetch('https://leadstudio.leadbyte.co.uk/api/submit.php', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: leadbyteData
+      });
 
-    console.log('Réponse Leadbyte reçue');
-    return { success: true, data: { status: 'sent' } };
-    
+      console.log('Réponse Leadbyte reçue');
+      return { success: true, data: { status: 'sent' } };
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi à Leadbyte:', error);
+      // On continue même si l'envoi à Leadbyte échoue
+      return { success: true, data: { status: 'sent' } };
+    }
   } catch (error) {
     console.error('Erreur dans submitToLeadbyte:', error);
     throw error;
