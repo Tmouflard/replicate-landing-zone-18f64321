@@ -1,3 +1,5 @@
+import { saveFormSubmission } from './supabaseService';
+
 interface LeadbyteData {
   firstname: string;
   lastname: string;
@@ -24,6 +26,19 @@ export const submitToLeadbyte = async (formData: any): Promise<any> => {
   };
 
   try {
+    // Enregistrer dans Supabase d'abord
+    await saveFormSubmission({
+      heating_type: formData.heatingType,
+      income: formData.income,
+      household_size: formData.householdSize,
+      is_owner: formData.isOwner,
+      name: formData.name,
+      email: formData.email,
+      postal: formData.postal,
+      phone: formData.phone,
+    });
+
+    // Ensuite envoyer à Leadbyte
     const response = await fetch('https://leadstudio.leadbyte.co.uk/api/submit.php', {
       method: 'POST',
       headers: {
@@ -42,12 +57,20 @@ export const submitToLeadbyte = async (formData: any): Promise<any> => {
 
     const data = await response.json();
     console.log('Leadbyte response:', data);
+
+    // Mettre à jour l'entrée Supabase avec la réponse de Leadbyte
+    await supabase
+      .from('form_submissions')
+      .update({ leadbyte_response: data })
+      .eq('email', formData.email)
+      .eq('created_at', new Date().toISOString());
+
     return {
       success: true,
       data
     };
   } catch (error) {
-    console.error('Error submitting to Leadbyte:', error);
+    console.error('Error:', error);
     return {
       success: false,
       error
