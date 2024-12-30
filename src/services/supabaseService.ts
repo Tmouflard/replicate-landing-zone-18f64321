@@ -21,7 +21,7 @@ export interface FormSubmission {
 export const saveFormSubmission = async (formData: FormSubmission) => {
   try {
     const { data, error } = await supabase
-      .from('form_submissions')
+      .from('LEADS - PAC')  // Mise à jour du nom de la table
       .insert([formData])
       .select();
 
