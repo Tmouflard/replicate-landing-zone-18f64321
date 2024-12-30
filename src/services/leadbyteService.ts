@@ -12,6 +12,8 @@ interface LeadbyteData {
 }
 
 export const submitToLeadbyte = async (formData: any): Promise<any> => {
+  console.log('Début submitToLeadbyte avec les données:', formData);
+  
   const [firstName, ...lastNameParts] = formData.name.split(' ');
   
   const leadbyteData: LeadbyteData = {
@@ -26,8 +28,9 @@ export const submitToLeadbyte = async (formData: any): Promise<any> => {
   };
 
   try {
+    console.log('Tentative de sauvegarde dans Supabase...');
     // Enregistrer dans Supabase d'abord
-    await saveFormSubmission({
+    const supabaseResult = await saveFormSubmission({
       heating_type: formData.heatingType,
       income: formData.income,
       household_size: formData.householdSize,
@@ -38,6 +41,13 @@ export const submitToLeadbyte = async (formData: any): Promise<any> => {
       phone: formData.phone,
     });
 
+    console.log('Résultat Supabase:', supabaseResult);
+
+    if (!supabaseResult.success) {
+      console.error('Erreur lors de la sauvegarde Supabase:', supabaseResult.error);
+    }
+
+    console.log('Tentative d\'envoi à Leadbyte...');
     // Ensuite envoyer à Leadbyte
     const response = await fetch('https://leadstudio.leadbyte.co.uk/api/submit.php', {
       method: 'POST',
@@ -56,21 +66,24 @@ export const submitToLeadbyte = async (formData: any): Promise<any> => {
     });
 
     const data = await response.json();
-    console.log('Leadbyte response:', data);
+    console.log('Réponse Leadbyte:', data);
 
     // Mettre à jour l'entrée Supabase avec la réponse de Leadbyte
-    await supabase
-      .from('form_submissions')
-      .update({ leadbyte_response: data })
-      .eq('email', formData.email)
-      .eq('created_at', new Date().toISOString());
+    if (supabaseResult.success) {
+      console.log('Mise à jour de l\'entrée Supabase avec la réponse Leadbyte...');
+      await supabase
+        .from('form_submissions')
+        .update({ leadbyte_response: data })
+        .eq('email', formData.email)
+        .eq('created_at', new Date().toISOString());
+    }
 
     return {
       success: true,
       data
     };
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Erreur dans submitToLeadbyte:', error);
     return {
       success: false,
       error

@@ -19,20 +19,29 @@ export interface FormSubmission {
 }
 
 export const saveFormSubmission = async (formData: FormSubmission) => {
+  console.log('Début saveFormSubmission avec les données:', formData);
+  
   try {
+    console.log('Tentative d\'insertion dans Supabase...');
     const { data, error } = await supabase
-      .from('LEADS - PAC')  // Mise à jour du nom de la table
+      .from('LEADS - PAC')
       .insert([formData])
       .select();
 
     if (error) {
-      console.error('Error saving to Supabase:', error);
+      console.error('Erreur Supabase détaillée:', {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code
+      });
       return { success: false, error };
     }
 
+    console.log('Données insérées avec succès:', data);
     return { success: true, data };
   } catch (error) {
-    console.error('Error in saveFormSubmission:', error);
+    console.error('Erreur dans saveFormSubmission:', error);
     return { success: false, error };
   }
 };
