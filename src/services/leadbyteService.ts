@@ -19,7 +19,7 @@ export const submitToLeadbyte = async (formData: any): Promise<any> => {
   try {
     console.log('Tentative de sauvegarde dans Supabase...');
     // Enregistrer dans Supabase d'abord
-    const supabaseResult = await saveFormSubmission({
+    await saveFormSubmission({
       heating_type: formData.heatingType,
       income: formData.income,
       household_size: formData.householdSize,
@@ -29,13 +29,6 @@ export const submitToLeadbyte = async (formData: any): Promise<any> => {
       postal: formData.postal,
       phone: formData.phone,
     });
-
-    console.log('Résultat Supabase:', supabaseResult);
-
-    if (!supabaseResult.success) {
-      console.error('Erreur lors de la sauvegarde Supabase:', supabaseResult.error);
-      throw new Error('Échec de la sauvegarde Supabase');
-    }
 
     const leadbyteData = new URLSearchParams({
       firstname: firstName,
