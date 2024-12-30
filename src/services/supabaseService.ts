@@ -22,8 +22,14 @@ export const saveFormSubmission = async (formData: FormSubmission) => {
   
   try {
     // Vérification que la connexion à Supabase est active
-    const { data: connectionTest } = await supabase.from('LEADS - PAC').select('count').limit(1);
-    console.log('Test de connexion Supabase:', connectionTest);
+    const { data: connectionTest, error: connectionError } = await supabase.from('LEADS - PAC').select('count').limit(1);
+    
+    if (connectionError) {
+      console.error('Erreur de connexion à Supabase:', connectionError);
+      throw new Error('Erreur de connexion à la base de données');
+    }
+    
+    console.log('Test de connexion Supabase réussi:', connectionTest);
 
     console.log('Tentative d\'insertion dans Supabase...');
     const { data, error } = await supabase
@@ -48,13 +54,13 @@ export const saveFormSubmission = async (formData: FormSubmission) => {
         hint: error.hint,
         code: error.code
       });
-      return { success: false, error };
+      throw error;
     }
 
     console.log('Données insérées avec succès:', data);
     return { success: true, data };
   } catch (error) {
     console.error('Erreur dans saveFormSubmission:', error);
-    return { success: false, error };
+    throw error;
   }
 };
