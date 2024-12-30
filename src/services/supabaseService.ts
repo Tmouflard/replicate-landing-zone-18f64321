@@ -15,17 +15,30 @@ export interface FormSubmission {
   email: string;
   postal: string;
   phone: string;
-  leadbyte_response?: any;
 }
 
 export const saveFormSubmission = async (formData: FormSubmission) => {
   console.log('Début saveFormSubmission avec les données:', formData);
   
   try {
+    // Vérification que la connexion à Supabase est active
+    const { data: connectionTest } = await supabase.from('LEADS - PAC').select('count').limit(1);
+    console.log('Test de connexion Supabase:', connectionTest);
+
     console.log('Tentative d\'insertion dans Supabase...');
     const { data, error } = await supabase
       .from('LEADS - PAC')
-      .insert([formData])
+      .insert([{
+        heating_type: formData.heating_type,
+        income: formData.income,
+        household_size: formData.household_size,
+        is_owner: formData.is_owner,
+        name: formData.name,
+        email: formData.email,
+        postal: formData.postal,
+        phone: formData.phone,
+        created_at: new Date().toISOString()
+      }])
       .select();
 
     if (error) {
