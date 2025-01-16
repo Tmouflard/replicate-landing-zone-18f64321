@@ -319,7 +319,21 @@ export const EligibilityForm = () => {
         </div>
       </div>
 
-      <form onSubmit={isLastStep ? handleSubmit : handleNext} className="space-y-6">
+      <form 
+        onSubmit={isLastStep ? handleSubmit : handleNext} 
+        className="space-y-6"
+        data-netlify="true"
+        name="eligibility-form"
+        method="POST"
+        netlify-honeypot="bot-field"
+      >
+        <input type="hidden" name="form-name" value="eligibility-form" />
+        <p className="hidden">
+          <label>
+            Don't fill this out if you're human: <input name="bot-field" />
+          </label>
+        </p>
+
         <div className="min-h-[300px]">
           <h3 className="text-lg font-semibold mb-4">{currentStepData.title}</h3>
           {currentStepData.component}
