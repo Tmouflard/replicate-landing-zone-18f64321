@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { submitToLeadbyte } from "@/services/leadbyteService";
+import { incrementStepVisit, updateFormStats } from "@/services/statsService";
 import { isValidFrenchPhoneNumber, isValidFrenchPostalCode } from "@/utils/validators";
+import { supabase } from "@/integrations/supabase/client";
 
 export const EligibilityForm = () => {
   const navigate = useNavigate();
@@ -24,6 +26,17 @@ export const EligibilityForm = () => {
     cookiesConsent: false,
   });
 
+  // Tracker le début du formulaire
+  useEffect(() => {
+    updateFormStats('start');
+  }, []);
+
+  // Tracker les visites par étape
+  useEffect(() => {
+    const stepName = steps[currentStep].title;
+    incrementStepVisit(currentStep + 1, stepName);
+  }, [currentStep]);
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | { target: { name: string; value: string } }
   ) => {
@@ -39,7 +52,7 @@ export const EligibilityForm = () => {
       if (currentStep < steps.length - 1) {
         setTimeout(() => {
           setCurrentStep(prev => prev + 1);
-        }, 300); // Small delay for better UX
+        }, 300);
       }
     }
   };
@@ -73,36 +86,52 @@ export const EligibilityForm = () => {
 
     if (!isValid) {
       toast.error("Tous les champs sont obligatoires");
+      updateFormStats('error');
       return;
     }
 
     // Validation du numéro de téléphone français
     if (!isValidFrenchPhoneNumber(formData.phone)) {
       toast.error("Veuillez entrer un numéro de téléphone français valide");
+      updateFormStats('error');
       return;
     }
 
     // Validation du code postal français
     if (!isValidFrenchPostalCode(formData.postal)) {
       toast.error("Veuillez entrer un code postal français valide");
+      updateFormStats('error');
       return;
     }
 
     if (!formData.cookiesConsent) {
       toast.error("Veuillez accepter les conditions d'utilisation");
+      updateFormStats('error');
       return;
     }
 
     try {
+      // Envoyer à Leadbyte
       const result = await submitToLeadbyte(formData);
-      if (result.success) {
-        navigate('/merci');
-      } else {
-        // En cas d'erreur, on redirige quand même vers la page de remerciement
-        navigate('/merci');
-      }
+      
+      // Sauvegarder dans Supabase
+      await supabase.from('form_submissions').insert([{
+        heating_type: formData.heatingType,
+        income: formData.income,
+        household_size: formData.householdSize,
+        is_owner: formData.isOwner,
+        name: formData.name,
+        email: formData.email,
+        postal: formData.postal,
+        phone: formData.phone,
+        leadbyte_response: result
+      }]);
+
+      updateFormStats('success');
+      navigate('/merci');
     } catch (error) {
       console.error('Error:', error);
+      updateFormStats('error');
       // En cas d'erreur, on redirige quand même vers la page de remerciement
       navigate('/merci');
     }

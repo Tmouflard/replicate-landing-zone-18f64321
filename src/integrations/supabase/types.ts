@@ -9,10 +9,111 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      form_stats: {
+        Row: {
+          created_at: string
+          errors: number | null
+          form_name: string
+          id: string
+          starts: number | null
+          successes: number | null
+        }
+        Insert: {
+          created_at?: string
+          errors?: number | null
+          form_name: string
+          id?: string
+          starts?: number | null
+          successes?: number | null
+        }
+        Update: {
+          created_at?: string
+          errors?: number | null
+          form_name?: string
+          id?: string
+          starts?: number | null
+          successes?: number | null
+        }
+        Relationships: []
+      }
+      form_submissions: {
+        Row: {
+          created_at: string
+          email: string | null
+          heating_type: string | null
+          household_size: string | null
+          id: string
+          income: string | null
+          is_owner: string | null
+          leadbyte_response: Json | null
+          name: string | null
+          phone: string | null
+          postal: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          heating_type?: string | null
+          household_size?: string | null
+          id?: string
+          income?: string | null
+          is_owner?: string | null
+          leadbyte_response?: Json | null
+          name?: string | null
+          phone?: string | null
+          postal?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          heating_type?: string | null
+          household_size?: string | null
+          id?: string
+          income?: string | null
+          is_owner?: string | null
+          leadbyte_response?: Json | null
+          name?: string | null
+          phone?: string | null
+          postal?: string | null
+        }
+        Relationships: []
+      }
+      step_stats: {
+        Row: {
+          created_at: string
+          id: string
+          step_name: string
+          step_number: number
+          visits: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          step_name: string
+          step_number: number
+          visits?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          step_name?: string
+          step_number?: number
+          visits?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      step_stats_with_dropoff: {
+        Row: {
+          created_at: string | null
+          dropoff_rate: number | null
+          step_name: string | null
+          step_number: number | null
+          visits: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never

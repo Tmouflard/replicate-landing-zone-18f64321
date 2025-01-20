@@ -34,26 +34,13 @@ export const submitToLeadbyte = async (formData: any): Promise<any> => {
         },
         body: leadbyteData
       });
-      leadbyteResponse = { status: 'sent' };
+      leadbyteResponse = { status: 'sent', timestamp: new Date().toISOString() };
     } catch (error) {
       console.error('Erreur lors de l\'envoi à Leadbyte:', error);
-      leadbyteResponse = { status: 'error', error: error.message };
+      leadbyteResponse = { status: 'error', error: error.message, timestamp: new Date().toISOString() };
     }
 
-    // Sauvegarde dans Supabase avec la réponse de Leadbyte
-    await saveFormSubmission({
-      heating_type: formData.heatingType,
-      income: formData.income,
-      household_size: formData.householdSize,
-      is_owner: formData.isOwner,
-      name: formData.name,
-      email: formData.email,
-      postal: formData.postal,
-      phone: formData.phone,
-      leadbyte_response: leadbyteResponse
-    });
-
-    return { success: true, data: { status: 'sent' } };
+    return leadbyteResponse;
   } catch (error) {
     console.error('Erreur dans submitToLeadbyte:', error);
     throw error;
