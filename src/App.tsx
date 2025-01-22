@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
-import { Index } from "@/pages/Index";
-import { ThankYou } from "@/pages/ThankYou";
+import Index from "@/pages/Index";
+import ThankYou from "@/pages/ThankYou";
 import { PrivacyPolicy } from "@/pages/PrivacyPolicy";
 import { CookieBanner } from "@/components/CookieBanner";
 
