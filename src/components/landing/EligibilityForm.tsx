@@ -381,15 +381,18 @@ export const EligibilityForm = () => {
               htmlFor="cookiesConsent"
               className="text-xs text-gray-500 cursor-pointer"
             >
-              En soumettant cette demande, vous acceptez d'être contacté par
-              téléphone et de recevoir des emails de la part des partenaires pour
-              le suivi de votre demande et la mission commerciale qui peut en
-              découler. Vous disposez du droit de vous inscrire sur la liste
-              d'opposition au démarchage téléphonique Bloctel ici. Pour en savoir
-              plus sur la gestion de vos données personnelles et exercer vos
-              droits, consultez notre{" "}
-              <a href="#" className="text-primary underline">
-                politique de confidentialité des données
+              En soumettant cette demande, j'accepte les{" "}
+              <Link to="/protection-des-donnees" className="text-accent hover:underline">
+                CGU
+              </Link>
+              . Vous disposez du droit de vous inscrire sur la liste d'opposition au démarchage téléphonique{" "}
+              <a 
+                href="https://www.bloctel.gouv.fr/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-accent hover:underline"
+              >
+                Bloctel
               </a>
               .
             </label>
