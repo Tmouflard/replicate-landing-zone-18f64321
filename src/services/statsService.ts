@@ -54,17 +54,12 @@ export const updateFormStats = async (type: 'start' | 'success' | 'error') => {
       .update(updates)
       .eq('id', existingStats.id);
   } else {
-    // Créer une nouvelle entrée
-    const newStats: { [key: string]: any } = {
-      form_name: 'eligibility',
-      starts: 0,
-      successes: 0,
-      errors: 0
-    };
-    newStats[`${type}s`] = 1;
-    
+    // Créer une nouvelle entrée avec form_name
     await supabase
       .from('form_stats')
-      .insert([newStats]);
+      .insert([{
+        form_name: 'eligibility',
+        [`${type}s`]: 1
+      }]);
   }
 };
