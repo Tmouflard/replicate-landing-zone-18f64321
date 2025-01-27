@@ -406,8 +406,8 @@ export const EligibilityForm = () => {
               Retour
             </Button>
           )}
-          <Button type="submit" className="flex-1 text-white">
-            {isLastStep ? "Calculer Mes Aides" : "Continuer"}
+          <Button type="submit" className="flex-1 bg-accent hover:bg-accent/90 text-white">
+            {isLastStep ? "Obtenir mon éligibilité >>" : "Continuer"}
           </Button>
         </div>
       </form>
