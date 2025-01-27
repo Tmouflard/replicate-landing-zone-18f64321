@@ -381,11 +381,7 @@ export const EligibilityForm = () => {
               htmlFor="cookiesConsent"
               className="text-xs text-gray-500 cursor-pointer"
             >
-              En soumettant cette demande, j'accepte les{" "}
-              <Link to="/protection-des-donnees" className="text-accent hover:underline">
-                CGU
-              </Link>
-              . Vous disposez du droit de vous inscrire sur la liste d'opposition au démarchage téléphonique{" "}
+              J'accepte de recevoir les détails de mon éligibilité au programme d'aides. Vous disposez du droit de vous inscrire sur la liste d'opposition au démarchage téléphonique{" "}
               <a 
                 href="https://www.bloctel.gouv.fr/" 
                 target="_blank" 
