@@ -1,3 +1,4 @@
+
 import { saveFormSubmission } from './supabaseService';
 
 export const submitToLeadbyte = async (formData: any): Promise<any> => {
@@ -18,9 +19,9 @@ export const submitToLeadbyte = async (formData: any): Promise<any> => {
       campid: 'POMPE-A-CHALEUR',
       sid: '1',
       returnjson: 'yes',
-      C1: 'LP-LOVABLE',
+      C1: 'lp lovable search',
       C2: 'https://france-action-ecologie.com/',
-      SOURCE: 'PMAX-LOVABLE'
+      SOURCE: 'SEARCH - Disco CP'
     });
 
     let leadbyteResponse = null;
