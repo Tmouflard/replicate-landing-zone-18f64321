@@ -122,6 +122,49 @@
     transform: translateY(0);
   }
 }
+
+/* Styles pour le modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.modal.active {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.75rem;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #666;
+}
+
+.modal-text {
+  line-height: 1.6;
+  color: #333;
+}
 </style>
 
 <form id="leadbyteForm" class="form-container">
@@ -250,7 +293,7 @@
     <div class="checkbox-group">
       <input type="checkbox" id="cookiesConsent" name="cookiesConsent" required>
       <label for="cookiesConsent" class="text-sm">
-        J'accepte de recevoir les détails de mon éligibilité au programme d'aides. Vous disposez du droit de vous inscrire sur la liste d'opposition au démarchage téléphonique <a href="https://www.bloctel.gouv.fr/" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">Bloctel</a>.
+        J'accepte de recevoir les détails de mon éligibilité au programme d'aides. <a href="#" id="showDetails" class="text-accent hover:underline">Détails</a>. Vous disposez du droit de vous inscrire sur la liste d'opposition au démarchage téléphonique <a href="https://www.bloctel.gouv.fr/" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">Bloctel</a>.
       </label>
     </div>
   </div>
@@ -260,6 +303,21 @@
     <button type="button" class="button button-next" id="nextButton">Obtenir mon éligibilité >></button>
   </div>
 </form>
+
+<!-- Modal pour les détails -->
+<div id="detailsModal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" id="closeModal">&times;</span>
+    <div class="modal-text">
+      <p class="mb-4">
+        Dans le cadre de l'utilisation du Site, les Utilisateurs consentent expressément à être contactés par VosDevis ou par l'un des partenaires suivants : Habitat Presto, Maison.fr, Renovation Man, Hello Artisan, Yes Travaux par téléphone, courrier électronique ou sms.
+      </p>
+      <p>
+        Conformément au Code de la Consommation, les Utilisateurs disposent d'un droit d'opposition au démarchage téléphonique en s'inscrivant gratuitement sur la liste d'opposition Bloctel. Si les Utilisateurs ne souhaitent plus être contactés par Vos-devis, ou par l'un de ses partenaires, les Utilisateurs peuvent leur indiquer directement, ou en informer Vos-devis, via la page Contact afin que Vos-devis transmette leur demande aux partenaires concernés
+      </p>
+    </div>
+  </div>
+</div>
 
 <script>
 let currentStep = 1;
@@ -389,7 +447,7 @@ async function handleSubmit() {
   }
 }
 
-// Initialisation
+// Gestion du modal
 document.addEventListener('DOMContentLoaded', () => {
   showStep(1);
   
@@ -416,6 +474,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 300);
       }
     });
+  });
+
+  const showDetailsLink = document.getElementById('showDetails');
+  const modal = document.getElementById('detailsModal');
+  const closeModal = document.getElementById('closeModal');
+
+  showDetailsLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    modal.classList.add('active');
+  });
+
+  closeModal.addEventListener('click', () => {
+    modal.classList.remove('active');
+  });
+
+  // Fermer le modal en cliquant en dehors
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.classList.remove('active');
+    }
   });
 });
 </script>
