@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "sonner";
@@ -6,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
+import { X } from "lucide-react";
 import { submitToLeadbyte } from "@/services/leadbyteService";
 import { incrementStepVisit, updateFormStats } from "@/services/statsService";
 import { isValidFrenchPhoneNumber, isValidFrenchPostalCode } from "@/utils/validators";
@@ -14,6 +17,7 @@ import { supabase } from "@/integrations/supabase/client";
 export const EligibilityForm = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
+  const [showDetails, setShowDetails] = useState(false);
   const [formData, setFormData] = useState({
     heatingType: "",
     income: "",
@@ -319,98 +323,126 @@ export const EligibilityForm = () => {
   const isLastStep = currentStep === steps.length - 1;
 
   return (
-    <div className="bg-white rounded-3xl shadow-xl p-8 eligibility-form">
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold mb-2">
-          CALCULEZ VOTRE <span className="text-accent">PRIME</span>
-        </h2>
-        <p className="text-gray-600">
-          Gratuit, sans engagement et ça ne prend que quelques minutes !
-        </p>
-      </div>
-
-      <div className="mb-6">
-        <div className="flex justify-between mb-2">
-          <span className="text-sm font-medium">
-            Étape {currentStep + 1} sur {steps.length}
-          </span>
-          <span className="text-sm font-medium">
-            {Math.round(((currentStep + 1) / steps.length) * 100)}%
-          </span>
-        </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div
-            className="bg-accent rounded-full h-2 transition-all duration-300"
-            style={{
-              width: `${((currentStep + 1) / steps.length) * 100}%`,
-            }}
-          />
-        </div>
-      </div>
-
-      <form 
-        onSubmit={isLastStep ? handleSubmit : handleNext} 
-        className="space-y-6"
-        data-netlify="true"
-        name="eligibility-form"
-        method="POST"
-        netlify-honeypot="bot-field"
-      >
-        <input type="hidden" name="form-name" value="eligibility-form" />
-        <p className="hidden">
-          <label>
-            Don't fill this out if you're human: <input name="bot-field" />
-          </label>
-        </p>
-
-        <div className="min-h-[300px]">
-          <h3 className="text-lg font-semibold mb-4">{currentStepData.title}</h3>
-          {currentStepData.component}
+    <>
+      <div className="bg-white rounded-3xl shadow-xl p-8 eligibility-form">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl font-bold mb-2">
+            CALCULEZ VOTRE <span className="text-accent">PRIME</span>
+          </h2>
+          <p className="text-gray-600">
+            Gratuit, sans engagement et ça ne prend que quelques minutes !
+          </p>
         </div>
 
-        {isLastStep && (
-          <div className="flex items-start space-x-2">
-            <Checkbox
-              id="cookiesConsent"
-              checked={formData.cookiesConsent}
-              onCheckedChange={(checked) => 
-                setFormData(prev => ({ ...prev, cookiesConsent: checked as boolean }))
-              }
-            />
-            <label
-              htmlFor="cookiesConsent"
-              className="text-xs text-gray-500 cursor-pointer"
-            >
-              J'accepte de recevoir les détails de mon éligibilité au programme d'aides. Vous disposez du droit de vous inscrire sur la liste d'opposition au démarchage téléphonique{" "}
-              <a 
-                href="https://www.bloctel.gouv.fr/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-accent hover:underline"
-              >
-                Bloctel
-              </a>
-              .
-            </label>
+        <div className="mb-6">
+          <div className="flex justify-between mb-2">
+            <span className="text-sm font-medium">
+              Étape {currentStep + 1} sur {steps.length}
+            </span>
+            <span className="text-sm font-medium">
+              {Math.round(((currentStep + 1) / steps.length) * 100)}%
+            </span>
           </div>
-        )}
-
-        <div className="flex gap-4">
-          {currentStep > 0 && (
-            <Button
-              type="button"
-              variant="outline"
-              className="flex-1"
-              onClick={handleBack}
-            >
-              Retour
-            </Button>
-          )}
-          <Button type="submit" className="flex-1 bg-accent hover:bg-accent/90 text-white">
-            {isLastStep ? "Obtenir mon éligibilité >>" : "Continuer"}
-          </Button>
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div
+              className="bg-accent rounded-full h-2 transition-all duration-300"
+              style={{
+                width: `${((currentStep + 1) / steps.length) * 100}%`,
+              }}
+            />
+          </div>
         </div>
-      </form>
-    </div>
+
+        <form 
+          onSubmit={isLastStep ? handleSubmit : handleNext} 
+          className="space-y-6"
+          data-netlify="true"
+          name="eligibility-form"
+          method="POST"
+          netlify-honeypot="bot-field"
+        >
+          <input type="hidden" name="form-name" value="eligibility-form" />
+          <p className="hidden">
+            <label>
+              Don't fill this out if you're human: <input name="bot-field" />
+            </label>
+          </p>
+
+          <div className="min-h-[300px]">
+            <h3 className="text-lg font-semibold mb-4">{currentStepData.title}</h3>
+            {currentStepData.component}
+          </div>
+
+          {isLastStep && (
+            <div className="flex items-start space-x-2">
+              <Checkbox
+                id="cookiesConsent"
+                checked={formData.cookiesConsent}
+                onCheckedChange={(checked) => 
+                  setFormData(prev => ({ ...prev, cookiesConsent: checked as boolean }))
+                }
+              />
+              <label
+                htmlFor="cookiesConsent"
+                className="text-xs text-gray-500 cursor-pointer"
+              >
+                J'accepte de recevoir les détails de mon éligibilité au programme d'aides.{" "}
+                <button 
+                  type="button"
+                  onClick={() => setShowDetails(true)}
+                  className="text-accent hover:underline"
+                >
+                  Détails
+                </button>
+                . Vous disposez du droit de vous inscrire sur la liste d'opposition au démarchage téléphonique{" "}
+                <a 
+                  href="https://www.bloctel.gouv.fr/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-accent hover:underline"
+                >
+                  Bloctel
+                </a>
+                .
+              </label>
+            </div>
+          )}
+
+          <div className="flex gap-4">
+            {currentStep > 0 && (
+              <Button
+                type="button"
+                variant="outline"
+                className="flex-1"
+                onClick={handleBack}
+              >
+                Retour
+              </Button>
+            )}
+            <Button type="submit" className="flex-1 bg-accent hover:bg-accent/90 text-white">
+              {isLastStep ? "Obtenir mon éligibilité >>" : "Continuer"}
+            </Button>
+          </div>
+        </form>
+      </div>
+
+      <Dialog open={showDetails} onOpenChange={setShowDetails}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+            <X className="h-4 w-4" />
+            <span className="sr-only">Close</span>
+          </DialogClose>
+          <div className="space-y-4 text-gray-700">
+            <p>
+              Dans le cadre de l'utilisation du Site, les Utilisateurs consentent expressément à être contactés par VosDevis ou par l'un des partenaires suivants : Habitat Presto, Maison.fr, Renovation Man, Hello Artisan, Yes Travaux par téléphone, courrier électronique ou sms.
+            </p>
+            <p>
+              Conformément au Code de la Consommation, les Utilisateurs disposent d'un droit d'opposition au démarchage téléphonique en s'inscrivant gratuitement sur la liste d'opposition Bloctel. Si les Utilisateurs ne souhaitent plus être contactés par Vos-devis, ou par l'un de ses partenaires, les Utilisateurs peuvent leur indiquer directement, ou en informer Vos-devis, via la page Contact afin que Vos-devis transmette leur demande aux partenaires concernés.
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
+
